@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manga Translation Reader</title>
+    <link rel="stylesheet" href="src/css/main.css">
+    <link rel="stylesheet" href="src/css/upload.css">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2196F3">
+    
+    <!-- iOS PWA support -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Manga Reader">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">📚 Manga Translation Reader</h1>
+            <p class="subtitle">Upload your manga and translation files to start reading</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Upload Section -->
+            <section class="upload-section" id="upload-section">
+                <div class="upload-area" id="upload-area">
+                    <div class="upload-icon">📁</div>
+                    <h2>Drop your manga ZIP file here</h2>
+                    <p>or click to browse</p>
+                    <input type="file" id="file-input" accept=".zip" style="display: none;">
+                    <button class="browse-btn" id="browse-btn">Browse Files</button>
+                </div>
+
+                <!-- Progress Section (hidden initially) -->
+                <div class="progress-section hidden" id="progress-section">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <p class="progress-text" id="progress-text">Processing...</p>
+                </div>
+
+                <!-- Series Naming Section (hidden initially) -->
+                <div class="series-setup hidden" id="series-setup">
+                    <h3>Name Your Manga Series</h3>
+                    <input type="text" id="series-name" placeholder="Enter series name..." maxlength="50">
+                    <div class="series-info" id="series-info">
+                        <!-- Will be populated with file count info -->
+                    </div>
+                    <button class="start-reading-btn" id="start-reading-btn">Start Reading</button>
+                </div>
+            </section>
+
+            <!-- Recent Series Section -->
+            <section class="recent-section" id="recent-section">
+                <h2>📖 Recent Series</h2>
+                <div class="recent-list" id="recent-list">
+                    <div class="no-recent">
+                        <p>No recent manga series found.</p>
+                        <p>Upload a ZIP file to get started!</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Instructions Section -->
+            <section class="instructions-section">
+                <h2>📋 How to Use</h2>
+                <div class="instruction-steps">
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <div class="step-content">
+                            <h3>Prepare Your Files</h3>
+                            <p>Use mokuro to generate OCR data, then translate the JSON files. Create a ZIP file with your manga images and translation JSONs.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <div class="step-content">
+                            <h3>Upload & Name</h3>
+                            <p>Drop your ZIP file above and give your manga series a name. This helps track your reading progress.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <div class="step-content">
+                            <h3>Start Reading</h3>
+                            <p>Tap the screen or use the toggle button to show/hide translation overlays while reading.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>Built for manga translation enthusiasts • Static hosting • Privacy-focused</p>
+        </footer>
+    </div>
+
+    <!-- JSZip Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    
+    <!-- Application Scripts -->
+    <script src="src/js/utils.js?v=20250826"></script>
+    <script src="src/js/indexeddb-manager.js?v=20250826"></script>
+    <script src="src/js/storage-manager.js?v=20250826"></script>
+    <script src="src/js/file-manager.js?v=20250826"></script>
+    <script src="src/js/main.js?v=20250826"></script>
+    
+    <script>
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', async () => {
+            const app = new MangaReaderApp();
+            await app.init();
+            
+            // Expose debug function globally
+            window.debugIndexedDB = () => app.debugIndexedDB();
+        });
+    </script>
+</body>
+</html>

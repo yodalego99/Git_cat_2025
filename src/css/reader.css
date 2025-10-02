@@ -1,0 +1,722 @@
+/**
+ * Reader-specific styles for the manga reader interface
+ */
+
+/* Reader Body */
+.reader-body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: var(--bg-primary);
+    height: 100vh;
+    touch-action: pan-x pan-y;
+}
+
+/* Reader Header */
+.reader-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: rgba(26, 26, 26, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    z-index: 1000;
+    transition: transform 0.3s ease;
+}
+
+.reader-header.hidden {
+    transform: translateY(-100%);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 0 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.series-info {
+    flex: 1;
+    text-align: center;
+    margin: 0 1rem;
+}
+
+.series-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 4px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.page-info {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.header-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Main Reader Area */
+.reader-main {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: 80px;
+    overflow: hidden;
+    background: #000;
+}
+
+.reader-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Page Container */
+.page-container {
+    position: relative;
+    max-width: 100%;
+    max-height: 100%;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-image {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    user-select: none;
+    transition: transform 0.2s ease;
+    cursor: grab;
+}
+
+.page-image:active {
+    cursor: grabbing;
+}
+
+.page-image.fit-width {
+    width: 100%;
+    height: auto;
+    max-height: none;
+}
+
+.page-image.fit-height {
+    height: 100%;
+    width: auto;
+    max-width: none;
+}
+
+/* Translation Overlay */
+.translation-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+}
+
+.translation-overlay.visible {
+    opacity: 1;
+}
+
+.translation-markers {
+    display: none !important;
+}
+
+.translation-text-list {
+    display: none !important;
+}
+
+.translation-marker {
+    display: none !important;
+}
+
+.translation-text-item {
+    display: none !important;
+}
+
+.translation-text-item.highlighted {
+    background: rgba(255, 255, 0, 0.8);
+    transform: translateX(-4px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.translation-block {
+    position: absolute;
+    pointer-events: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.1;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+    transition: all 0.2s ease;
+    z-index: 11;
+    white-space: pre-wrap;
+    box-sizing: border-box;
+    display: inline-block; /* shrink background to content */
+    text-align: left;
+    max-width: 100%;
+}
+
+/* Translation Styles */
+.translation-block.overlay {
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 2px 4px;
+    border-radius: 2px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    font-weight: 500;
+}
+
+.translation-block.bubble {
+    background: white;
+    color: black;
+    padding: 4px 6px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    position: relative;
+    font-weight: 500;
+}
+
+.translation-block.bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 12px;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid white;
+}
+
+.translation-block.outline {
+    color: white;
+    font-weight: bold;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 0 2px #000;
+}
+
+/* Navigation Zones */
+.nav-zone {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 30%;
+    z-index: 5;
+    cursor: pointer;
+    background: transparent;
+    transition: background-color 0.2s ease;
+}
+
+.nav-left {
+    left: 0;
+}
+
+.nav-right {
+    right: 0;
+}
+
+.nav-zone:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-zone:active {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Page Loading */
+.page-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.page-loading .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--border);
+    border-top: 4px solid var(--accent);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+.no-translation {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 193, 7, 0.9);
+    color: #000;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    z-index: 20;
+}
+
+/* Bottom Navigation */
+.reader-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: rgba(26, 26, 26, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+}
+
+.reader-nav.hidden {
+    transform: translateY(100%);
+}
+
+.btn-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
+    min-width: 100px;
+    justify-content: center;
+}
+
+.btn-nav:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.page-slider {
+    flex: 1;
+    margin: 0 2rem;
+    position: relative;
+}
+
+.slider {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border);
+    outline: none;
+    appearance: none;
+    cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+.slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s ease;
+}
+
+.slider::-moz-range-thumb:hover {
+    transform: scale(1.2);
+}
+
+/* Settings Panel */
+.settings-panel {
+    position: fixed;
+    top: 0;
+    right: -350px;
+    width: 350px;
+    height: 100vh;
+    background: var(--bg-primary);
+    border-left: 1px solid var(--border);
+    z-index: 2000;
+    transition: right 0.3s ease;
+    overflow-y: auto;
+}
+
+.settings-panel.open {
+    right: 0;
+}
+
+.settings-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-secondary);
+}
+
+.settings-header h3 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.settings-body {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.setting-group {
+    margin-bottom: 1.5rem;
+}
+
+.setting-label {
+    display: block;
+    color: var(--text-primary);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.setting-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.setting-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.setting-range {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border);
+    outline: none;
+    appearance: none;
+    cursor: pointer;
+}
+
+.setting-range::-webkit-slider-thumb {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+}
+
+.setting-range::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    border: none;
+}
+
+.setting-checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.setting-checkbox input {
+    display: none;
+}
+
+.checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    margin-right: 0.75rem;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.setting-checkbox input:checked + .checkmark {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.setting-checkbox input:checked + .checkmark::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 6px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* Toast */
+.toast {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    border: 1px solid var(--border);
+    z-index: 3000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.toast.show {
+    opacity: 1;
+}
+
+/* Mobile Specific Styles */
+@media (max-width: 768px) {
+    .reader-header {
+        height: 50px;
+    }
+    
+    .reader-main {
+        top: 50px;
+        bottom: 70px;
+    }
+    
+    .reader-nav {
+        height: 70px;
+        padding: 0 0.75rem;
+    }
+    
+    .header-content {
+        padding: 0 0.75rem;
+    }
+    
+    .series-title {
+        font-size: 1rem;
+    }
+    
+    .btn-nav {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.75rem;
+        min-width: 80px;
+    }
+    
+    .page-slider {
+        margin: 0 1rem;
+    }
+    
+    .settings-panel {
+        width: 100%;
+        right: -100%;
+    }
+    
+    .nav-zone {
+        width: 35%;
+    }
+    
+    .translation-block {
+        font-size: 14px;
+    }
+    
+    .translation-block.overlay {
+        padding: 3px 6px;
+    }
+    
+    .translation-block.bubble {
+        padding: 5px 8px;
+    }
+}
+
+/* Landscape Mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .reader-header {
+        height: 45px;
+    }
+    
+    .reader-main {
+        top: 45px;
+        bottom: 60px;
+    }
+    
+    .reader-nav {
+        height: 60px;
+    }
+    
+    .series-title {
+        font-size: 0.9rem;
+    }
+    
+    .btn-nav {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.6rem;
+        min-width: 70px;
+    }
+}
+
+/* RTL Reading Direction */
+.reader-container.rtl .nav-left {
+    right: 0;
+    left: auto;
+}
+
+.reader-container.rtl .nav-right {
+    left: 0;
+    right: auto;
+}
+
+/* Auto-hide UI */
+.auto-hide .reader-header,
+.auto-hide .reader-nav {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.auto-hide .reader-header:hover,
+.auto-hide .reader-nav:hover,
+.auto-hide.show-ui .reader-header,
+.auto-hide.show-ui .reader-nav {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Fullscreen Mode */
+.fullscreen .reader-main {
+    top: 0;
+    bottom: 0;
+}
+
+.fullscreen .reader-header,
+.fullscreen .reader-nav {
+    display: none;
+}
+
+/* Touch Feedback */
+@media (hover: none) {
+    .nav-zone:hover {
+        background: transparent;
+    }
+    
+    .nav-zone:active {
+        background: rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .translation-block {
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+/* Animation for page transitions */
+@keyframes pageSlideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pageSlideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+}
+
+.page-container.slide-in {
+    animation: pageSlideIn 0.3s ease-out;
+}
+
+.page-container.slide-out {
+    animation: pageSlideOut 0.3s ease-out;
+}
+
+/* Loading states */
+.page-image.loading {
+    opacity: 0.5;
+}
+
+.page-image.loaded {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+/* Zoom functionality for pan-zoom */
+.page-image.zoomable {
+    cursor: zoom-in;
+    transition: transform 0.3s ease;
+}
+
+.page-image.zoomed {
+    cursor: grab;
+    transform-origin: center;
+}
+
+.page-image.zoomed:active {
+    cursor: grabbing;
+}

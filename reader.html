@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manga Reader</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="src/css/main.css">
+    <link rel="stylesheet" href="src/css/reader.css">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Theme color for mobile -->
+    <meta name="theme-color" content="#1a1a1a">
+    
+    <!-- Prevent zoom on input focus -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+</head>
+<body class="reader-body">
+    <!-- Header -->
+    <header class="reader-header" id="readerHeader">
+        <div class="header-content">
+            <button class="btn btn-icon" id="backBtn" title="Back to Upload">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+            </button>
+            
+            <div class="series-info">
+                <h1 class="series-title" id="seriesTitle">Loading...</h1>
+                <div class="page-info">
+                    <span id="currentPage">1</span> / <span id="totalPages">1</span>
+                </div>
+            </div>
+            
+            <div class="header-controls">
+                <button class="btn btn-icon" id="settingsBtn" title="Settings">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.44,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Reader Area -->
+    <main class="reader-main" id="readerMain">
+        <div class="reader-container" id="readerContainer">
+            <!-- Page Image -->
+            <div class="page-container" id="pageContainer">
+                <img 
+                    id="pageImage" 
+                    class="page-image" 
+                    alt="Manga page"
+                    draggable="false"
+                />
+                
+                <!-- Translation Overlay -->
+                <div class="translation-overlay" id="translationOverlay">
+                    <!-- Color-coded markers positioned on the image -->
+                    <div class="translation-markers" id="translationMarkers">
+                        <!-- Markers will be inserted here -->
+                    </div>
+                    
+                    <!-- Text panel on the right side -->
+                    <div class="translation-text-panel" id="translationTextPanel">
+                        <h3 style="margin-top: 0; color: #333;">Translations</h3>
+                        <div id="translationTextList">
+                            <!-- Translation text items will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Loading Indicator -->
+                <div class="page-loading" id="pageLoading">
+                    <div class="spinner"></div>
+                    <p>Loading page...</p>
+                </div>
+                
+                <!-- No Translation Message -->
+                <div class="no-translation" id="noTranslation" style="display: none;">
+                    <p>No translation available for this page</p>
+                </div>
+            </div>
+            
+            <!-- Navigation Zones (invisible tap areas) -->
+            <div class="nav-zone nav-left" id="navLeft" title="Previous page"></div>
+            <div class="nav-zone nav-right" id="navRight" title="Next page"></div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="reader-nav" id="readerNav">
+        <button class="btn btn-nav" id="prevBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+            </svg>
+            Previous
+        </button>
+        
+        <button class="btn btn-nav" id="overlayToggle" title="Toggle Translations">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12.87 15.07l-2.54-2.54.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/>
+            </svg>
+            Translate
+        </button>
+
+        <button class="btn btn-nav" id="separateToggle" title="Separate overlapping texts">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <!-- Arrows pointing outwards icon -->
+                <path d="M9 5h2v4h4v2H9V5zm6 14h-2v-4H9v-2h6v6zM5 9h4V5h2v6H5V9zm14 6h-4v4h-2v-6h6v2z"/>
+            </svg>
+            Separate
+        </button>
+        
+        <div class="page-slider">
+            <input 
+                type="range" 
+                id="pageSlider" 
+                class="slider" 
+                min="1" 
+                max="1" 
+                value="1"
+                title="Jump to page"
+            />
+        </div>
+        
+        <button class="btn btn-nav" id="nextBtn">
+            Next
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+            </svg>
+        </button>
+    </nav>
+
+    <!-- Settings Panel -->
+    <div class="settings-panel" id="settingsPanel">
+        <div class="settings-content">
+            <div class="settings-header">
+                <h3>Reader Settings</h3>
+                <button class="btn btn-icon" id="closeSettings">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="settings-body">
+                <div class="setting-group">
+                    <label class="setting-label">Reading Direction</label>
+                    <select id="readingDirection" class="setting-input">
+                        <option value="ltr">Left to Right</option>
+                        <option value="rtl">Right to Left</option>
+                    </select>
+                </div>
+                
+                <div class="setting-group">
+                    <label class="setting-label">Translation Style</label>
+                    <select id="translationStyle" class="setting-input">
+                        <option value="overlay">Overlay</option>
+                        <option value="bubble">Speech Bubble</option>
+                        <option value="outline">Outlined Text</option>
+                    </select>
+                </div>
+                
+                <div class="setting-group">
+                    <label class="setting-label">
+                        Translation Opacity: <span id="opacityValue">80%</span>
+                    </label>
+                    <input 
+                        type="range" 
+                        id="translationOpacity" 
+                        class="setting-range" 
+                        min="20" 
+                        max="100" 
+                        value="80"
+                    />
+                </div>
+                
+                <div class="setting-group">
+                    <label class="setting-label">
+                        Text Size: <span id="textSizeValue">16px</span>
+                    </label>
+                    <input 
+                        type="range" 
+                        id="textSize" 
+                        class="setting-range" 
+                        min="12" 
+                        max="24" 
+                        value="16"
+                    />
+                </div>
+                
+                <div class="setting-group">
+                    <label class="setting-checkbox">
+                        <input type="checkbox" id="fitToWidth" checked>
+                        <span class="checkmark"></span>
+                        Fit image to width
+                    </label>
+                </div>
+                
+                <div class="setting-group">
+                    <label class="setting-checkbox">
+                        <input type="checkbox" id="hideUI">
+                        <span class="checkmark"></span>
+                        Auto-hide interface
+                    </label>
+                </div>
+                
+                <div class="setting-group">
+                    <button class="btn btn-secondary" id="resetProgress">
+                        Reset Reading Progress
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Toast -->
+    <div class="toast" id="progressToast">
+        <span id="toastMessage">Progress saved!</span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/js/utils.js?v=20250826"></script>
+    <script src="src/js/indexeddb-manager.js?v=20250826"></script>
+    <script src="src/js/storage-manager.js?v=20250826"></script>
+    <script src="src/js/reader.js?v=20250826"></script>
+    
+    <script>
+        // Initialize reader
+        document.addEventListener('DOMContentLoaded', async () => {
+            const reader = new MangaReader();
+            await reader.init();
+        });
+    </script>
+</body>
+</html>
